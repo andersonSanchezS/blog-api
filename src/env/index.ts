@@ -1,3 +1,5 @@
+import { Dialect } from "sequelize/types"
+
 /**
  * Returns the name of the database
  * @return {string} name database
@@ -21,6 +23,12 @@ export const DB_PASS = () => process.env.DB_PASS || 'root'
  * @return {string} server database
  */
 export const DB_HOST = () => process.env.DB_HOST || 'localhost'
+
+/**
+ * Returns the dialect of the database
+ * @return {Dialect | undefined} dialect database
+ */
+export const DB_DIALECT = (): Dialect => (process.env.DB_DIALECT || 'mysql') as Dialect
 
 /**
  * Returns the dialect of the database

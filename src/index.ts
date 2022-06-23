@@ -15,7 +15,7 @@ dotenv.config()
 import { REST_PORT, API_VERSION, ENVIRONMENT } from './env'
 
 // Database Connection
-import '@db/db'
+import sequelize from '@db/db'
 
 // Rest Api Routes
 import router from '@rest/index'
