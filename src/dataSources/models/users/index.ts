@@ -1,114 +1,135 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-// // Id Generator
-// import { nanoid } from 'nanoid'
+// Id Generator
+import { nanoid } from 'nanoid'
 
-// // Sequelize and database connection
-// import sequelize from '@db/db'
+// Sequelize and database connection
+import sequelize from '@db/db'
 
-// // Sequelize Types
-// import Sequelize from 'sequelize'
+// Sequelize Types
+import Sequelize from 'sequelize'
 
-// // users interface
-// import { IUserModel } from './types'
+// Users interface
 
-// // users logs model
-// import ProjectLog from '@logs/userRoles/index'
+import { IUserModel } from './types'
 
-// // Import required models for relations
-// //import UserModel from '@models/users/index'
-// const db = sequelize()
+// Users logs model
+import UsersLogsModel from '@logs/userRoles/index'
 
-// const ProjectModel = db.define<IUserModel>('project', {
-//     pIdAuto: {
-//         type: Sequelize.INTEGER,
-//         unique: true,
-//         autoIncrement: true
-//     },
+// Import required models for relations
+import UserRolesModel from '@models/userRoles/index'
 
-//     pId: {
-//         type: Sequelize.STRING(50),
-//         primaryKey: true
-//     },
+const db = sequelize()
 
-//     pName: {
-//         type: Sequelize.STRING(255),
-//         allowNull: false,
-//         onUpdate: 'CASCADE',
-//         onDelete: 'CASCADE'
-//     },
+const UsersModel = db.define<IUserModel>('users', {
+    uIdAuto: {
+        type: Sequelize.INTEGER,
+        unique: true,
+        autoIncrement: true
+    },
 
-//     pPriority: {
-//         type: Sequelize.INTEGER,
-//         allowNull: false,
-//         onUpdate: 'CASCADE',
-//         onDelete: 'CASCADE'
-//     },
+    uId: {
+        type: Sequelize.STRING(50),
+        primaryKey: true
+    },
 
-//     pDescription: {
-//         type: Sequelize.STRING(255),
-//         allowNull: false,
-//         onUpdate: 'CASCADE',
-//         onDelete: 'CASCADE'
-//     },
+    uName: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+    },
+    uLastName: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+    },
+    uEmail: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+    },
+    uPassword: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+    },
+    uRoleId: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+    },
+    uState: {
+        type: Sequelize.TINYINT,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        defaultValue: 1
+    },
+    uEdited: {
+        type: Sequelize.TINYINT,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        defaultValue: 1
+    },
+    uGoogleAuth: {
+        type: Sequelize.TINYINT,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        defaultValue: 0
+    }
 
-//     pState: {
-//         type: Sequelize.INTEGER,
-//         allowNull: false,
-//         onUpdate: 'CASCADE',
-//         onDelete: 'CASCADE'
-//     }
+}, {
+    timestamps: true,
+    paranoid: true,
+    hooks: {
+        beforeCreate: (attributes: any, options: any) => {
+            const id = !!attributes.uId
+            options.rqType = options.updateOnDuplicate ? id ? 'BULKUPDATE' : 'BULKCREATE' : 'CREATE'
+            attributes.uId = attributes.uId || nanoid(32)
+            return options
+        },
+        afterUpdate: (attributes: any, options: any) => {
+            UsersLogsModel.create({
+                ...attributes?.dataValues,
+                aLog: 2,
+                userId: options.context?.uId,
+                createdAt: undefined,
+                updatedAt: undefined,
+                deletedAt: undefined
+            })
+                .catch(() => undefined)
 
-// }, {
-//     timestamps: true,
-//     paranoid: true,
-//     hooks: {
-//         beforeCreate: (attributes: any, options: any) => {
-//             const id = !!attributes.aId
-//             options.rqType = options.updateOnDuplicate ? id ? 'BULKUPDATE' : 'BULKCREATE' : 'CREATE'
-//             attributes.pId = attributes.pId || nanoid(32)
-//             return options
-//         },
-//         afterUpdate: (attributes: any, options: any) => {
-//             ProjectLog.create({
-//                 ...attributes?.dataValues,
-//                 aLog: 2,
-//                 userId: options.context?.uId,
-//                 createdAt: undefined,
-//                 updatedAt: undefined,
-//                 deletedAt: undefined
-//             })
-//                 .catch(() => undefined)
+            // Return registered attributes
+            return attributes
+        },
+        afterCreate: (attributes: any, options: any) => {
+            UsersLogsModel.create({
+                ...attributes?.dataValues,
+                aLog: options.rqType === 'BULKUPDATE' ? 2 : 1,
+                userId: options.context?.uId,
+                createdAt: undefined,
+                updatedAt: undefined,
+                deletedAt: undefined
+            })
+                .catch(() => undefined)
 
-//             // Return registered attributes
-//             return attributes
-//         },
-//         afterCreate: (attributes: any, options: any) => {
-//             ProjectLog.create({
-//                 ...attributes?.dataValues,
-//                 aLog: options.rqType === 'BULKUPDATE' ? 2 : 1,
-//                 userId: options.context?.uId,
-//                 createdAt: undefined,
-//                 updatedAt: undefined,
-//                 deletedAt: undefined
-//             })
-//                 .catch(() => undefined)
+            // Return registered attributes
+            return attributes
 
-//             // Return registered attributes
-//             return attributes
+        }
+    }
+})
 
-//         }
-//     }
-// })
+UsersModel.hasOne(UserRolesModel, {
+    foreignKey: 'urId',
+    sourceKey: 'uRoleId'
+})
 
-// ProjectModel.hasMany(TaskModel, {
-//     foreignKey: 'projectId',
-//     sourceKey: 'pId'
-// })
-
-// TaskModel.belongsTo(ProjectModel, {
-//     foreignKey: 'projectId',
-//     targetKey: 'pId'
-// })
-
-// export default ProjectModel
+export default UsersModel

@@ -1,3 +1,6 @@
+// Id Generator
+import { nanoid } from 'nanoid'
+
 // Sequelize and database connection
 import sequelize from '@db/db'
 
@@ -5,31 +8,86 @@ import sequelize from '@db/db'
 import Sequelize from 'sequelize'
 
 // Project interface
-import { IUserRolesLogModel } from './types'
+import { IUserRolesModel } from './types'
 
+// Task log model
+import userRolesLog from '@logs/userRoles/index'
 const db = sequelize()
 
-const UserRolesModel = db.define<IUserRolesLogModel>('userRolesLogs', {
-    urId: {
-        type: Sequelize.STRING(255),
-        primaryKey: true
-    },
+const UserRolesModel = db.define<IUserRolesModel>('task', {
     urIdAuto: {
         type: Sequelize.INTEGER,
+        unique: true,
         autoIncrement: true
     },
-    urName: Sequelize.STRING(255),
-    urLastName: Sequelize.STRING(255),
-    urEmail: Sequelize.STRING(255),
-    urPassword: Sequelize.STRING(255),
-    urState: Sequelize.TINYINT,
-    urGoogleAuth: Sequelize.TINYINT,
-    urEdited: Sequelize.TINYINT,
-    aLog: Sequelize.TINYINT,
-    userId: Sequelize.STRING(255)
+
+    urId: {
+        type: Sequelize.STRING(50),
+        primaryKey: true
+    },
+
+    urDescription: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+    },
+
+    urCode: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+    },
+
+    urState: {
+        type: Sequelize.TINYINT,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        defaultValue: 1
+    }
+
 }, {
     timestamps: true,
-    paranoid: true
+    paranoid: true,
+    hooks: {
+        beforeCreate: (attributes: any, options: any) => {
+            const id = !!attributes.urId
+            options.rqType = options.updateOnDuplicate ? id ? 'BULKUPDATE' : 'BULKCREATE' : 'CREATE'
+            attributes.urId = attributes.urId || nanoid(32)
+            return options
+        },
+        afterUpdate: (attributes: any, options: any) => {
+            userRolesLog.create({
+                ...attributes?.dataValues,
+                aLog: 2,
+                userId: options.context?.uId,
+                createdAt: undefined,
+                updatedAt: undefined,
+                deletedAt: undefined
+            })
+                .catch(() => undefined)
+
+            // Return registered attributes
+            return attributes
+        },
+        afterCreate: (attributes: any, options: any) => {
+            userRolesLog.create({
+                ...attributes?.dataValues,
+                aLog: options.rqType === 'BULKUPDATE' ? 2 : 1,
+                userId: options.context?.uId,
+                createdAt: undefined,
+                updatedAt: undefined,
+                deletedAt: undefined
+            })
+                .catch(() => undefined)
+
+            // Return registered attributes
+            return attributes
+
+        }
+    }
 })
 
 export default UserRolesModel
