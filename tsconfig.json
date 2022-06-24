@@ -36,7 +36,9 @@
             "@errors/*": ["./errors/*"],
             "@utils/*": ["./utils/*"],
             "@validations/*": ["./validations/*"],
-            "@db/*": ["./dataSources/*"]
+            "@db/*": ["./dataSources/*"],
+            "@models/*": ["./dataSources/models/*"],
+            "@logs/*": ["./dataSources/logs/*"]
         } /* Specify a set of entries that re-map imports to additional lookup locations. */,
         // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
         // "typeRoots": [],                                  /* Specify multiple folders that act like `./node_modules/@types`. */

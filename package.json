@@ -45,7 +45,9 @@
         "@errors": "src/errors",
         "@utils": "src/utils",
         "@validations": "src/validations",
-        "@db": "src/dataSources"
+        "@db": "src/dataSources",
+        "@models": "src/dataSources/models",
+        "@logs": "src/dataSources/logs"
     },
     "scripts": {
         "dev": "node_modules/.bin/ts-node-dev --respawn --notify false --prefer-ts --ignore-watch node_modules -- src/index.ts"
