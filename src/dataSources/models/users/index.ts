@@ -127,9 +127,9 @@ const UsersModel = db.define<IUserModel>('users', {
     }
 })
 
-UsersModel.hasOne(UserRolesModel, {
-    foreignKey: 'urId',
-    sourceKey: 'uRoleId'
+UserRolesModel.hasOne(UsersModel, {
+    foreignKey: 'uRoleId',
+    sourceKey: 'urId'
 })
 
 export default UsersModel
