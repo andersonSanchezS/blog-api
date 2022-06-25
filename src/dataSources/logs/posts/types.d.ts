@@ -6,6 +6,7 @@ export interface IPostsLog {
     pTitle: string
     pDescription: string
     pContent: string
+    categoryId: string
     pState: number
     aLog: number
     userId: string

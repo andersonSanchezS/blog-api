@@ -27,6 +27,7 @@ const UserRolesModel = db.define<IUsersModel>(
         uState: Sequelize.TINYINT,
         uGoogleAuth: Sequelize.TINYINT,
         uEdited: Sequelize.TINYINT,
+        roleId: Sequelize.STRING(255),
         aLog: Sequelize.TINYINT,
         userId: Sequelize.STRING(255)
     },

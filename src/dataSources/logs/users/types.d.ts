@@ -10,6 +10,7 @@ export interface IUsersLog{
     uState:number,
     uGoogleAuth:number,
     uEdited:number,
+    roleId:string,
     aLog: number,
     userId: string,
     createdAt?: Date

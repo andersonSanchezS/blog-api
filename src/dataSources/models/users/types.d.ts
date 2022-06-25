@@ -7,7 +7,7 @@ export interface IUser {
     uLastName: string
     uEmail: string
     uPassword: string
-    uRoleId: string
+    roleId: string
     uState: number
     uGoogleAuth: number
     uEdited: number

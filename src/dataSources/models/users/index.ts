@@ -59,11 +59,15 @@ const UsersModel = db.define<IUserModel>(
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE'
         },
-        uRoleId: {
+        roleId: {
             type: Sequelize.STRING(255),
             allowNull: false,
             onUpdate: 'CASCADE',
-            onDelete: 'CASCADE'
+            onDelete: 'CASCADE',
+            references: {
+                model: UserRolesModel,
+                key: 'urId'
+            }
         },
         uState: {
             type: Sequelize.TINYINT,
@@ -130,10 +134,5 @@ const UsersModel = db.define<IUserModel>(
         }
     }
 )
-
-UserRolesModel.hasOne(UsersModel, {
-    foreignKey: 'uRoleId',
-    sourceKey: 'urId'
-})
 
 export default UsersModel
