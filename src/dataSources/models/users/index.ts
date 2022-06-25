@@ -21,111 +21,115 @@ import UserRolesModel from '@models/userRoles/index'
 
 const db = sequelize()
 
-const UsersModel = db.define<IUserModel>('users', {
-    uIdAuto: {
-        type: Sequelize.INTEGER,
-        unique: true,
-        autoIncrement: true
-    },
-
-    uId: {
-        type: Sequelize.STRING(50),
-        primaryKey: true
-    },
-
-    uName: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-    },
-    uLastName: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-    },
-    uEmail: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-    },
-    uPassword: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-    },
-    uRoleId: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-    },
-    uState: {
-        type: Sequelize.TINYINT,
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        defaultValue: 1
-    },
-    uEdited: {
-        type: Sequelize.TINYINT,
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        defaultValue: 1
-    },
-    uGoogleAuth: {
-        type: Sequelize.TINYINT,
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        defaultValue: 0
-    }
-
-}, {
-    timestamps: true,
-    paranoid: true,
-    hooks: {
-        beforeCreate: (attributes: any, options: any) => {
-            const id = !!attributes.uId
-            options.rqType = options.updateOnDuplicate ? id ? 'BULKUPDATE' : 'BULKCREATE' : 'CREATE'
-            attributes.uId = attributes.uId || nanoid(32)
-            return options
+const UsersModel = db.define<IUserModel>(
+    'users',
+    {
+        uIdAuto: {
+            type: Sequelize.INTEGER,
+            unique: true,
+            autoIncrement: true
         },
-        afterUpdate: (attributes: any, options: any) => {
-            UsersLogsModel.create({
-                ...attributes?.dataValues,
-                aLog: 2,
-                userId: options.context?.uId,
-                createdAt: undefined,
-                updatedAt: undefined,
-                deletedAt: undefined
-            })
-                .catch(() => undefined)
 
-            // Return registered attributes
-            return attributes
+        uId: {
+            type: Sequelize.STRING(50),
+            primaryKey: true
         },
-        afterCreate: (attributes: any, options: any) => {
-            UsersLogsModel.create({
-                ...attributes?.dataValues,
-                aLog: options.rqType === 'BULKUPDATE' ? 2 : 1,
-                userId: options.context?.uId,
-                createdAt: undefined,
-                updatedAt: undefined,
-                deletedAt: undefined
-            })
-                .catch(() => undefined)
 
-            // Return registered attributes
-            return attributes
+        uName: {
+            type: Sequelize.STRING(255),
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+        },
+        uLastName: {
+            type: Sequelize.STRING(255),
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+        },
+        uEmail: {
+            type: Sequelize.STRING(255),
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+        },
+        uPassword: {
+            type: Sequelize.STRING(255),
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+        },
+        uRoleId: {
+            type: Sequelize.STRING(255),
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+        },
+        uState: {
+            type: Sequelize.TINYINT,
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+            defaultValue: 1
+        },
+        uEdited: {
+            type: Sequelize.TINYINT,
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+            defaultValue: 1
+        },
+        uGoogleAuth: {
+            type: Sequelize.TINYINT,
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+            defaultValue: 0
+        }
+    },
+    {
+        timestamps: true,
+        paranoid: true,
+        hooks: {
+            beforeCreate: (attributes: any, options: any) => {
+                const id = !!attributes.uId
+                options.rqType = options.updateOnDuplicate
+                    ? id
+                        ? 'BULKUPDATE'
+                        : 'BULKCREATE'
+                    : 'CREATE'
+                attributes.uId = attributes.uId || nanoid(32)
+                return options
+            },
+            afterUpdate: (attributes: any, options: any) => {
+                UsersLogsModel.create({
+                    ...attributes?.dataValues,
+                    aLog: 2,
+                    userId: options.context?.uId,
+                    createdAt: undefined,
+                    updatedAt: undefined,
+                    deletedAt: undefined
+                }).catch(() => undefined)
 
+                // Return registered attributes
+                return attributes
+            },
+            afterCreate: (attributes: any, options: any) => {
+                UsersLogsModel.create({
+                    ...attributes?.dataValues,
+                    aLog: options.rqType === 'BULKUPDATE' ? 2 : 1,
+                    userId: options.context?.uId,
+                    createdAt: undefined,
+                    updatedAt: undefined,
+                    deletedAt: undefined
+                }).catch(() => undefined)
+
+                // Return registered attributes
+                return attributes
+            }
         }
     }
-})
+)
 
 UserRolesModel.hasOne(UsersModel, {
     foreignKey: 'uRoleId',

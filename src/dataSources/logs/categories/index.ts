@@ -5,12 +5,12 @@ import sequelize from '@db/db'
 import Sequelize from 'sequelize'
 
 // Project interface
-import { ICommentLogsModel } from './types'
+import { ICategoriesLogsModel } from './types'
 
 const db = sequelize()
 
-const CommentLogsModel = db.define<ICommentLogsModel>(
-    'commentsLogs',
+const CategoryLogsModel = db.define<ICategoriesLogsModel>(
+    'categoriesLogs',
     {
         cId: {
             type: Sequelize.STRING(255),
@@ -20,9 +20,8 @@ const CommentLogsModel = db.define<ICommentLogsModel>(
             type: Sequelize.INTEGER,
             autoIncrement: true
         },
-        postId: Sequelize.STRING(255),
-        userId: Sequelize.STRING(255),
-        cContent: Sequelize.TEXT,
+        cDescription: Sequelize.STRING(255),
+        cCode: Sequelize.STRING(255),
         cState: Sequelize.TINYINT,
         aLog: Sequelize.TINYINT
     },
@@ -32,4 +31,4 @@ const CommentLogsModel = db.define<ICommentLogsModel>(
     }
 )
 
-export default CommentLogsModel
+export default CategoryLogsModel

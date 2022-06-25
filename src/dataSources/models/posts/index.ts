@@ -8,41 +8,47 @@ import sequelize from '@db/db'
 import Sequelize from 'sequelize'
 
 // Project interface
-import { IUserRolesModel } from './types'
+import { IPostModel } from './types'
 
 // Task log model
 import userRolesLog from '@logs/userRoles/index'
 const db = sequelize()
 
-const UserRolesModel = db.define<IUserRolesModel>(
-    'userRoles',
+const PostModel = db.define<IPostModel>(
+    'posts',
     {
-        urIdAuto: {
+        pIdAuto: {
             type: Sequelize.INTEGER,
             unique: true,
             autoIncrement: true
         },
 
-        urId: {
+        pId: {
             type: Sequelize.STRING(50),
             primaryKey: true
         },
 
-        urDescription: {
+        pTitle: {
             type: Sequelize.STRING(255),
             allowNull: false,
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE'
         },
 
-        urCode: {
+        pDescription: {
             type: Sequelize.STRING(255),
             allowNull: false,
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE'
         },
 
-        urState: {
+        pContent: {
+            type: Sequelize.TEXT,
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE'
+        },
+        pState: {
             type: Sequelize.TINYINT,
             allowNull: false,
             onUpdate: 'CASCADE',
@@ -55,13 +61,13 @@ const UserRolesModel = db.define<IUserRolesModel>(
         paranoid: true,
         hooks: {
             beforeCreate: (attributes: any, options: any) => {
-                const id = !!attributes.urId
+                const id = !!attributes.pId
                 options.rqType = options.updateOnDuplicate
                     ? id
                         ? 'BULKUPDATE'
                         : 'BULKCREATE'
                     : 'CREATE'
-                attributes.urId = attributes.urId || nanoid(32)
+                attributes.pId = attributes.pId || nanoid(32)
                 return options
             },
             afterUpdate: (attributes: any, options: any) => {
@@ -98,4 +104,4 @@ const UserRolesModel = db.define<IUserRolesModel>(
     }
 )
 
-export default UserRolesModel
+export default PostModel

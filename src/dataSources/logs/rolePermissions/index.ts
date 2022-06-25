@@ -5,28 +5,24 @@ import sequelize from '@db/db'
 import Sequelize from 'sequelize'
 
 // Project interface
-import { IUsersModel } from './types'
+import { IRolePermissionsLogsModel } from './types'
 
 const db = sequelize()
 
-const UserRolesModel = db.define<IUsersModel>(
-    'usersLogs',
+const RolePermissionLogsModel = db.define<IRolePermissionsLogsModel>(
+    'rolesPermissionsLogs',
     {
-        uId: {
+        rpId: {
             type: Sequelize.STRING(255),
             primaryKey: true
         },
-        uIdAuto: {
+        rpIdAuto: {
             type: Sequelize.INTEGER,
             autoIncrement: true
         },
-        uName: Sequelize.STRING(255),
-        uLastName: Sequelize.STRING(255),
-        uEmail: Sequelize.STRING(255),
-        uPassword: Sequelize.STRING(255),
-        uState: Sequelize.TINYINT,
-        uGoogleAuth: Sequelize.TINYINT,
-        uEdited: Sequelize.TINYINT,
+        roleId: Sequelize.STRING(255),
+        rpPermission: Sequelize.STRING(255),
+        rpState: Sequelize.TINYINT,
         aLog: Sequelize.TINYINT,
         userId: Sequelize.STRING(255)
     },
@@ -36,4 +32,4 @@ const UserRolesModel = db.define<IUsersModel>(
     }
 )
 
-export default UserRolesModel
+export default RolePermissionLogsModel

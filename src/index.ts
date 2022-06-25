@@ -1,3 +1,4 @@
+/* eslint-disable arrow-parens */
 /* eslint-disable import/first */
 /* eslint-disable no-console */
 // Express Imports
@@ -54,5 +55,13 @@ app.all('*', (req, res, next) => {
 app.use(ErrorHandler)
 
 app.listen(REST_PORT(), () => {
-    console.log(`Rest server started at port ${REST_PORT()}`)
+    sequelize()
+        .sync({ force: true })
+        .then(() => {
+            console.log('database connection has been established successfully')
+        })
+        .catch((err) => {
+            console.error('Unable to connect to the database:', err)
+        })
+    console.log(`Server is running on port ${REST_PORT()}`)
 })
