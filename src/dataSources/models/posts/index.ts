@@ -11,7 +11,12 @@ import Sequelize from 'sequelize'
 import { IPostModel } from './types'
 
 // Task log model
-import userRolesLog from '@logs/userRoles/index'
+import postsLogs from '@logs/posts/index'
+
+// Relations
+import UsersModel from '@models/users/index'
+import CategoriesModel from '@models/categories/index'
+
 const db = sequelize()
 
 const PostModel = db.define<IPostModel>(
@@ -48,6 +53,26 @@ const PostModel = db.define<IPostModel>(
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE'
         },
+        userId: {
+            type: Sequelize.STRING(255),
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+            references: {
+                model: UsersModel,
+                key: 'uId'
+            }
+        },
+        categoryId: {
+            type: Sequelize.STRING(255),
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+            references: {
+                model: CategoriesModel,
+                key: 'cId'
+            }
+        },
         pState: {
             type: Sequelize.TINYINT,
             allowNull: false,
@@ -71,7 +96,7 @@ const PostModel = db.define<IPostModel>(
                 return options
             },
             afterUpdate: (attributes: any, options: any) => {
-                userRolesLog
+                postsLogs
                     .create({
                         ...attributes?.dataValues,
                         aLog: 2,
@@ -86,7 +111,7 @@ const PostModel = db.define<IPostModel>(
                 return attributes
             },
             afterCreate: (attributes: any, options: any) => {
-                userRolesLog
+                postsLogs
                     .create({
                         ...attributes?.dataValues,
                         aLog: options.rqType === 'BULKUPDATE' ? 2 : 1,

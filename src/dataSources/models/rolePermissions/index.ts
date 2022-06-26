@@ -11,7 +11,7 @@ import Sequelize from 'sequelize'
 import { IRolePermissionModel } from './types'
 
 // Task log model
-import userRolesLog from '@logs/userRoles/index'
+import rolePermissionsLogs from '@logs/rolePermissions/index'
 
 // Import required models for relations
 import UserRolesModel from '@models/userRoles/index'
@@ -63,17 +63,17 @@ const RolePermissionsModel = db.define<IRolePermissionModel>(
         paranoid: true,
         hooks: {
             beforeCreate: (attributes: any, options: any) => {
-                const id = !!attributes.urId
+                const id = !!attributes.rpId
                 options.rqType = options.updateOnDuplicate
                     ? id
                         ? 'BULKUPDATE'
                         : 'BULKCREATE'
                     : 'CREATE'
-                attributes.urId = attributes.urId || nanoid(32)
+                attributes.rpId = attributes.rpId || nanoid(32)
                 return options
             },
             afterUpdate: (attributes: any, options: any) => {
-                userRolesLog
+                rolePermissionsLogs
                     .create({
                         ...attributes?.dataValues,
                         aLog: 2,
@@ -88,7 +88,7 @@ const RolePermissionsModel = db.define<IRolePermissionModel>(
                 return attributes
             },
             afterCreate: (attributes: any, options: any) => {
-                userRolesLog
+                rolePermissionsLogs
                     .create({
                         ...attributes?.dataValues,
                         aLog: options.rqType === 'BULKUPDATE' ? 2 : 1,

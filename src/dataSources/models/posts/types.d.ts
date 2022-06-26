@@ -6,6 +6,8 @@ export interface IPost {
     pTitle: string
     pDescription: string
     pContent: string
+    userId: string
+    categoryId: string
     pState: number
     createdAt?: Date
     updatedAt?: Date
