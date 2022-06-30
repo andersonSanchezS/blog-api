@@ -17,8 +17,7 @@ const RolePermissionLogsModel = db.define<IRolePermissionsLogsModel>(
             primaryKey: true
         },
         rpIdAuto: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true
+            type: Sequelize.INTEGER
         },
         roleId: Sequelize.STRING(255),
         rpPermission: Sequelize.STRING(255),

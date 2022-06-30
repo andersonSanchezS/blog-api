@@ -9,7 +9,7 @@ import { IUsersModel } from './types'
 
 const db = sequelize()
 
-const UserRolesModel = db.define<IUsersModel>(
+const UserRolesLogsModel = db.define<IUsersModel>(
     'usersLogs',
     {
         uId: {
@@ -17,8 +17,7 @@ const UserRolesModel = db.define<IUsersModel>(
             primaryKey: true
         },
         uIdAuto: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true
+            type: Sequelize.INTEGER
         },
         uName: Sequelize.STRING(255),
         uLastName: Sequelize.STRING(255),
@@ -37,4 +36,4 @@ const UserRolesModel = db.define<IUsersModel>(
     }
 )
 
-export default UserRolesModel
+export default UserRolesLogsModel

@@ -16,12 +16,11 @@ import categoriesLogs from '@logs/categories/index'
 const db = sequelize()
 
 const CategoriesModel = db.define<ICategoriesModel>(
-    'comments',
+    'categories',
     {
         cIdAuto: {
             type: Sequelize.INTEGER,
-            unique: true,
-            autoIncrement: true
+            unique: true
         },
 
         cId: {

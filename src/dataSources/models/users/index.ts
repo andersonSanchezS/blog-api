@@ -26,8 +26,7 @@ const UsersModel = db.define<IUserModel>(
     {
         uIdAuto: {
             type: Sequelize.INTEGER,
-            unique: true,
-            autoIncrement: true
+            unique: true
         },
 
         uId: {
@@ -134,5 +133,15 @@ const UsersModel = db.define<IUserModel>(
         }
     }
 )
+
+UserRolesModel.hasOne(UsersModel, {
+    foreignKey: 'roleId',
+    sourceKey: 'urId'
+})
+
+UsersModel.belongsTo(UserRolesModel, {
+    foreignKey: 'roleId',
+    targetKey: 'urId'
+})
 
 export default UsersModel

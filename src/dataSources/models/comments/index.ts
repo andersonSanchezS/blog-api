@@ -24,8 +24,7 @@ const CommentModel = db.define<ICommentsModel>(
     {
         cIdAuto: {
             type: Sequelize.INTEGER,
-            unique: true,
-            autoIncrement: true
+            unique: true
         },
 
         cId: {
@@ -116,4 +115,24 @@ const CommentModel = db.define<ICommentsModel>(
     }
 )
 
-export default PostModel
+PostModel.hasMany(CommentModel, {
+    foreignKey: 'postId',
+    sourceKey: 'pId'
+})
+
+CommentModel.belongsTo(PostModel, {
+    foreignKey: 'postId',
+    targetKey: 'pId'
+})
+
+UsersModel.hasMany(CommentModel, {
+    foreignKey: 'userId',
+    sourceKey: 'uId'
+})
+
+CommentModel.belongsTo(UsersModel, {
+    foreignKey: 'userId',
+    targetKey: 'uId'
+})
+
+export default CommentModel

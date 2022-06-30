@@ -23,8 +23,7 @@ const RolePermissionsModel = db.define<IRolePermissionModel>(
     {
         rpIdAuto: {
             type: Sequelize.INTEGER,
-            unique: true,
-            autoIncrement: true
+            unique: true
         },
 
         rpId: {
@@ -105,5 +104,15 @@ const RolePermissionsModel = db.define<IRolePermissionModel>(
         }
     }
 )
+
+UserRolesModel.hasOne(RolePermissionsModel, {
+    foreignKey: 'roleId',
+    sourceKey: 'urId'
+})
+
+RolePermissionsModel.belongsTo(UserRolesModel, {
+    foreignKey: 'roleId',
+    targetKey: 'urId'
+})
 
 export default RolePermissionsModel

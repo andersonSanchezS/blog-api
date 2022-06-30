@@ -17,8 +17,7 @@ const CommentLogsModel = db.define<ICommentLogsModel>(
             primaryKey: true
         },
         cIdAuto: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true
+            type: Sequelize.INTEGER
         },
         postId: Sequelize.STRING(255),
         userId: Sequelize.STRING(255),

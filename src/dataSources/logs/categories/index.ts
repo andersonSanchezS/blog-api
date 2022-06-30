@@ -17,8 +17,7 @@ const CategoryLogsModel = db.define<ICategoriesLogsModel>(
             primaryKey: true
         },
         cIdAuto: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true
+            type: Sequelize.INTEGER
         },
         cDescription: Sequelize.STRING(255),
         cCode: Sequelize.STRING(255),

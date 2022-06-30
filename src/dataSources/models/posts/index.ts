@@ -24,8 +24,7 @@ const PostModel = db.define<IPostModel>(
     {
         pIdAuto: {
             type: Sequelize.INTEGER,
-            unique: true,
-            autoIncrement: true
+            unique: true
         },
 
         pId: {
@@ -128,5 +127,25 @@ const PostModel = db.define<IPostModel>(
         }
     }
 )
+
+UsersModel.hasOne(PostModel, {
+    foreignKey: 'userId',
+    sourceKey: 'uId'
+})
+
+PostModel.belongsTo(UsersModel, {
+    foreignKey: 'userId',
+    targetKey: 'uId'
+})
+
+CategoriesModel.hasOne(PostModel, {
+    foreignKey: 'categoryId',
+    sourceKey: 'cId'
+})
+
+PostModel.belongsTo(CategoriesModel, {
+    foreignKey: 'categoryId',
+    targetKey: 'cId'
+})
 
 export default PostModel

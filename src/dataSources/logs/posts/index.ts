@@ -17,8 +17,7 @@ const PostLogsModel = db.define<IPostLogsModel>(
             primaryKey: true
         },
         pIdAuto: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true
+            type: Sequelize.INTEGER
         },
         pTitle: Sequelize.STRING(255),
         pDescription: Sequelize.STRING(255),

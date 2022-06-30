@@ -19,8 +19,7 @@ const UserRolesModel = db.define<IUserRolesModel>(
     {
         urIdAuto: {
             type: Sequelize.INTEGER,
-            unique: true,
-            autoIncrement: true
+            unique: true
         },
 
         urId: {

@@ -17,8 +17,7 @@ const UserRoleLogsModel = db.define<IUserRolesLogsModel>(
             primaryKey: true
         },
         urIdAuto: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true
+            type: Sequelize.INTEGER
         },
         urDescription: Sequelize.STRING(255),
         urCode: Sequelize.STRING(255),

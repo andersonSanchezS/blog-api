@@ -56,7 +56,7 @@ app.use(ErrorHandler)
 
 app.listen(REST_PORT(), () => {
     sequelize()
-        .sync({ force: true })
+        .authenticate()
         .then(() => {
             console.log('database connection has been established successfully')
         })
